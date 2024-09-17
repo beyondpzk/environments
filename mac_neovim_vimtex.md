@@ -20,7 +20,7 @@ sudo tlmgr install latexmk --repository http://mirrors.tuna.tsinghua.edu.cn/CTAN
 sudo tlmgr update --self --all
 export PATH=/usr/local/texlive/2024basic/bin/universal-darwin:$PATHOA
 sudo texhash
-sudo mktexlsr
+sudo mktexls
 
 ```
 
