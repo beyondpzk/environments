@@ -18,6 +18,9 @@ set bg=dark
 set ignorecase
 set smartcase
 
+set wrap
+set textwidth=120 "设置自动换行的长度为 80 个字符，
+set linebreak
 " 设置自动缩进
 filetype plugin indent on
 " 设置鼠标支持
@@ -56,7 +59,74 @@ Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 "下面这个是补全函数参数的
 "Plug 'ray-x/lsp_signature.nvim' # 与上面hrsh7th/nvim_lsp_signature_help 类似.
+" Using Vim-Plug:
+Plug 'Mofiqul/dracula.nvim'
+" 看缩进线的
+Plug 'Yggdroot/indentLine'
 call plug#end()
+
+" Vim-Script:
+lua << EOF
+local dracula = require("dracula")
+dracula.setup({
+  -- customize dracula color palette
+  -- 深灰色：#808080
+  -- 灰色：#C0C0C0
+  -- 浅灰色：#D3D3D3
+  colors = {
+    bg = "#282A36",
+    -- fg = "#808080",
+    fg = "#C0C0C0",
+    selection = "#44475A",
+    comment = "#6272A4",
+    red = "#FF5555",
+    orange = "#FFB86C",
+    yellow = "#F1FA8C",
+    green = "#50fa7b",
+    purple = "#BD93F9",
+    cyan = "#8BE9FD",
+    pink = "#FF79C6",
+    bright_red = "#FF6E6E",
+    bright_green = "#69FF94",
+    bright_yellow = "#FFFFA5",
+    bright_blue = "#D6ACFF",
+    bright_magenta = "#FF92DF",
+    bright_cyan = "#A4FFFF",
+    bright_white = "#FFFFFF",
+    menu = "#21222C",
+    visual = "#3E4452",
+    gutter_fg = "#4B5263",
+    nontext = "#3B4048",
+    white = "#ABB2BF",
+    black = "#191A21",
+  },
+  -- show the '~' characters after the end of buffers
+  show_end_of_buffer = true, -- default false
+  -- use transparent background
+  transparent_bg = true, -- default false
+  -- set custom lualine background color
+  lualine_bg_color = "#44475a", -- default nil
+  -- set italic comment
+  italic_comment = true, -- default false
+  -- overrides the default highlights with table see `:h synIDattr`
+  overrides = {},
+  -- You can use overrides as table like this
+  -- overrides = {
+  --   NonText = { fg = "white" }, -- set NonText fg to white
+  --   NvimTreeIndentMarker = { link = "NonText" }, -- link to NonText highlight
+  --   Nothing = {} -- clear highlight of Nothing
+  -- },
+  -- Or you can also use it like a function to get color from theme
+  -- overrides = function (colors)
+  --   return {
+  --     NonText = { fg = colors.white }, -- set NonText fg to white of theme
+  --   }
+  -- end,
+})
+EOF
+colorscheme dracula
+"颜色设置参考下面,本来fg是白色,我把它设成了紫色了
+"https://github.com/Mofiqul/dracula.nvim
 
 " 加载插件
 if filereadable(expand('~/.vim/plugged/plugin/installed.vim'))
@@ -281,4 +351,53 @@ endfunction
 " 之前按Ctrl-w比较费劲,可以用F2来代替, 别忘记了按完F2后还要按上下键.
 nnoremap <F2> <C-w>
 
+" . 在vim里面是连接符
 
+autocmd BufNewFile *.md exec ":call SetMd()"
+func SetMd()
+    let filename = expand("%:t")
+    if strpart(filename, 0, 5) == "2024-"
+        let parts = split(filename, "-")
+        let name = parts[3]
+        "let title = split(name, "\.")
+        call setline(1, "---")
+        call append(line("."), "layout: post")
+        call append(line(".")+1, "title: " . name)
+        call append(line(".")+2, "date: " . parts[0] . "-" . parts[1] . "-" . parts[2])
+        call append(line(".")+3, "categories: [reading]")
+        call append(line(".")+4, "tags: reading")
+        call append(line(".")+5, "---")
+        call append(line(".")+6, "<!--more-->")
+        call append(line(".")+7, "")
+        call append(line(".")+8, "")
+        call append(line(".")+9, "- [paper地址]()")
+        call append(line(".")+10, "#")
+        call append(line(".")+11, "")
+        call append(line(".")+12, "## sketch the main points")
+    else
+        return 0
+    endif
+endfun
+
+"开启或关闭缩进线：
+let g:indentLine_enabled = 1
+"设置缩进线的颜色：
+let g:indentLine_char = '┊'
+let g:indentLine_color_term = 239
+let g:indentLine_color_gui = '#aaaaaa'
+"设置缩进线的样式：
+let g:indentLine_conceal_underline = 0
+
+
+"下面是 ruff的配置,一个更快的python工具
+
+lua << EOF
+require('lspconfig').ruff_lsp.setup {
+  init_options = {
+    settings = {
+      -- Any extra CLI arguments for `ruff` go here.
+      args = {},
+    }
+  }
+}
+EOF
