@@ -14,7 +14,7 @@ set bg=dark
 " 设置搜索时不区分大小写
 set ignorecase
 set smartcase
-
+" 设置 自动换行
 set wrap
 set textwidth=120 "设置自动换行的长度为 80 个字符，
 set linebreak
@@ -249,10 +249,11 @@ let g:languageserver_python = {'server': 'pylsp',}
 nnoremap <F6> :lua vim.lsp.buf.definition()<CR>
 
 " 设置快捷键 F8 触发 autopep8 格式化（假设使用 autopep8）
-nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
+"nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
 " 或者设置快捷键触发 black 格式化（假设使用 black）
 " nnoremap <F8> :silent!!black %<CR>:e<CR>
-
+"也可以用ruff
+nnoremap <F8> :silent!!ruff check --fix && ruff format %<CR>:e<CR>
 
 " 代码折叠相关配置,不过感觉不太好用
 " 设置开启折叠
@@ -353,7 +354,7 @@ nnoremap <F2> <C-w>
 autocmd BufNewFile *.md exec ":call SetMd()"
 func SetMd()
     let filename = expand("%:t")
-    if strpart(filename, 0, 5) == "2024-"
+    if strpart(filename, 0, 2) == "20"
         let parts = split(filename, "-")
         let name = parts[3]
         "let title = split(name, "\.")
@@ -388,7 +389,6 @@ let g:indentLine_conceal_underline = 0
 
 
 "下面是 ruff的配置,一个更快的python工具
-
 lua << EOF
 require('lspconfig').ruff_lsp.setup {
   init_options = {
