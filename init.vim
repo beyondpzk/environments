@@ -1,6 +1,3 @@
-
-
-
 syntax on
 set cursorline
 set encoding=utf-8
@@ -45,7 +42,7 @@ Plug 'scrooloose/nerdcommenter'
 "Plug 'nvim-tree/nvim-tree.lua' 与nerdtree重复.
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
-Plug 'morhetz/gruvbox'
+"Plug 'morhetz/gruvbox'
 
 "vim-fugitive与vim-airline 一起使用可以显示当前代码的git所在状态.
 Plug 'tpope/vim-fugitive'   
@@ -200,30 +197,30 @@ nnoremap <F8> :lua vim.lsp.buf.code_action()<CR>
 "}
 "EOF
 
-lua << EOF
-lspconfig = require("lspconfig")
-lspconfig.pylsp.setup {
-    on_attach = custom_attach,
-    settings = {
-        pylsp = {
-        plugins = {
-            black = { enabled = false },
-            autopep8 = { enabled = false },
-            yapf = { enabled = false },
-            pylint = { enabled = false, executable = "pylint" },
-            pyflakes = { enabled = false },
-            pycodestyle = { enabled = false },
-            pylsp_mypy = { enabled = false },
-            jedi_completion = { fuzzy = true },
-            pyls_isort = { enabled = false },
-        },
-        },
-    },
-    flags = {
-        debounce_text_changes = 200,
-    },
-}
-EOF
+"lua << EOF
+"lspconfig = require("lspconfig")
+"lspconfig.pylsp.setup {
+    "on_attach = custom_attach,
+    "settings = {
+        "pylsp = {
+        "plugins = {
+            "black = { enabled = false },
+            "autopep8 = { enabled = false },
+            "yapf = { enabled = false },
+            "pylint = { enabled = false, executable = "pylint" },
+            "pyflakes = { enabled = false },
+            "pycodestyle = { enabled = false },
+            "pylsp_mypy = { enabled = false },
+            "jedi_completion = { fuzzy = true },
+            "pyls_isort = { enabled = false },
+        "},
+        "},
+    "},
+    "flags = {
+        "debounce_text_changes = 200,
+    "},
+"}
+"EOF
 
 
 "在mac上可以用texlab
@@ -270,8 +267,8 @@ nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
 " nnoremap <silent> za :if foldclosed(line('.')) == -1 | exe 'normal! zc' | else | exe 'normal! zo' | endif<CR>
 "
 
-autocmd vimenter * nested colorscheme gruvbox
-let g:gruvbox_contrast_dark = 'medium'
+"autocmd vimenter * nested colorscheme gruvbox
+"let g:gruvbox_contrast_dark = 'medium'
 :abbr emb from IPython import embed;embed()
 autocmd BufNewFile *.py exec ":call SetPy()"
 func SetPy()
@@ -371,9 +368,10 @@ func SetMd()
         call append(line(".")+7, "")
         call append(line(".")+8, "")
         call append(line(".")+9, "- [paper地址]()")
-        call append(line(".")+10, "#")
-        call append(line(".")+11, "")
-        call append(line(".")+12, "## sketch the main points")
+        call append(line(".")+10, "")
+        call append(line(".")+11, "#")
+        call append(line(".")+12, "")
+        call append(line(".")+13, "## sketch the main points")
     else
         return 0
     endif
