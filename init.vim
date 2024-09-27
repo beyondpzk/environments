@@ -72,8 +72,7 @@ dracula.setup({
   -- 浅灰色：#D3D3D3
   colors = {
     bg = "#282A36",
-    -- fg = "#808080",
-    fg = "#C0C0C0",
+    fg = "#808080",
     selection = "#44475A",
     comment = "#6272A4",
     red = "#FF5555",
@@ -362,10 +361,10 @@ func SetMd()
     if strpart(filename, 0, 2) == "20"
         let parts = split(filename, "-")
         let name = parts[3]
-        "let title = split(name, "\.")
+        let title = split(name, "\.md")
         call setline(1, "---")
         call append(line("."), "layout: post")
-        call append(line(".")+1, "title: " . name)
+        call append(line(".")+1, "title: " . title[0])
         call append(line(".")+2, "date: " . parts[0] . "-" . parts[1] . "-" . parts[2])
         call append(line(".")+3, "categories: [reading]")
         call append(line(".")+4, "tags: reading")
