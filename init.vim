@@ -247,17 +247,13 @@ let g:languageserver_python = {'server': 'pylsp',}
 " nnoremap <F9> :lua vim.lsp.buf.references()<CR>
 nnoremap <F6> :lua vim.lsp.buf.definition()<CR>
 
-" 设置快捷键 F8 触发 autopep8 格式化（假设使用 autopep8）
-"nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
 " 或者设置快捷键触发 black 格式化（假设使用 black）
 " nnoremap <F8> :silent!!black %<CR>:e<CR>
 "也可以用ruff,据说比较快.
-nnoremap <silent><F8> :call FixPythonFile()<CR>
-function! FixPythonFile()
-   let current_file = expand('%')
-   execute "silent!term ruff format ". current_file
-endfunction
+nnoremap <F8> :silent!! ruff check --fix %<CR>:e<CR>
 
+" 设置快捷键 F9 触发 autopep8 格式化（假设使用 autopep8）
+nnoremap <F9> :silent!!autopep8 --in-place %<CR>:e<CR>
 
 " 代码折叠相关配置,不过感觉不太好用
 " 设置开启折叠
