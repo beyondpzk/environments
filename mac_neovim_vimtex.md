@@ -43,3 +43,7 @@ sudo tlmgr info XeCJK
 
 
 4.  文件开头记得加上 `%! Tex program = xelatex`
+
+5. 如果遇到编译的时候, `! LaTeX Error: File filename xxx.sty not found`
+
+直接运行 `sudo tlmgr install xxx` 即可 直到把所有错误全部解决.
