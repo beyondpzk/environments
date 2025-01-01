@@ -24,6 +24,15 @@ screen-256color
 # method textDocument/definition is not supported by any of the servers registered for the current buffer
 
 neovim有时候跳转的时候会报这个错.
+解决方案: [亲测成功]
 
-解决方案: 卸载重新安装  python-lsp-server  `python3 -m pip install "python-lsp-server[all]" -U`
+#### mac
+
+卸载重新安装  python-lsp-server  `python3 -m pip install "python-lsp-server[all]" -U`
 最好先更新python的setuptools ` pip install -U setuptools`
+
+目前我的版本是 
+```
+python-lsp-server                  1.12.0
+
+```
