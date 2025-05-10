@@ -70,3 +70,7 @@ if &diff
     "colors blue
 endif
 ```
+
+
+另外注意 git d targetbranch dir/file 之后
+左边的是targetbranch中的代码. 右边的是现在的代码.

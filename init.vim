@@ -4,6 +4,7 @@ set encoding=utf-8
 set ts=4 
 set sts=4 
 set expandtab
+autocmd FileType python set expandtab | set tabstop=4
 set shiftwidth=4
 set history=10000
 set nu
@@ -16,7 +17,7 @@ set ignorecase
 set smartcase
 " 设置 自动换行
 set wrap
-set textwidth=120 "设置自动换行的长度为 80 个字符，
+set textwidth=160 "设置自动换行的长度为 80 个字符，
 set linebreak
 " 设置自动缩进
 filetype plugin indent on
@@ -60,6 +61,8 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'Mofiqul/dracula.nvim'
 " 看缩进线的
 Plug 'Yggdroot/indentLine'
+" git 相关
+Plug 'f-person/git-blame.nvim'
 call plug#end()
 
 " Vim-Script:
@@ -72,7 +75,8 @@ dracula.setup({
   -- 浅灰色：#D3D3D3
   colors = {
     bg = "#282A36",
-    fg = "#808080",
+    -- fg = "#808080",
+    fg = "#C0C0C0",
     selection = "#44475A",
     comment = "#6272A4",
     red = "#FF5555",
@@ -196,10 +200,22 @@ nnoremap <F8> :lua vim.lsp.buf.code_action()<CR>
 "}
 "EOF
 
+
+
+"lua << EOF
+"local lspconfig = require('lspconfig')
+"-- 创建自动命令组
+"vim.api.nvim_create_autocmd("FileType", {
+    "pattern = "python",
+    "callback = function()
+        "lspconfig.pylsp.setup{}
+    "end
+"})
+"EOF
+
 "lua << EOF
 "lspconfig = require("lspconfig")
 "lspconfig.pylsp.setup {
-    "on_attach = custom_attach,
     "settings = {
         "pylsp = {
         "plugins = {
@@ -210,8 +226,9 @@ nnoremap <F8> :lua vim.lsp.buf.code_action()<CR>
             "pyflakes = { enabled = false },
             "pycodestyle = { enabled = false },
             "pylsp_mypy = { enabled = false },
-            "jedi_completion = { fuzzy = true },
+            "jedi_completion = { fuzzy = false },
             "pyls_isort = { enabled = false },
+            "isort = {enabled = false},
         "},
         "},
     "},
@@ -241,17 +258,21 @@ let g:autopairs_autoclose = 1
 
 map <F1> <leader>ci <CR>
 
-let g:languageserver_python = {'server': 'pylsp',}
+"let g:languageserver_python = {'server': 'pylsp',}
+"let g:languageserver_python = {'server': 'jedi',}
 
 " 设置快捷键 F6 列出引用并跳转到引用处, 引用有一些慢,还是定义比较快一些.
 " nnoremap <F9> :lua vim.lsp.buf.references()<CR>
 nnoremap <F6> :lua vim.lsp.buf.definition()<CR>
+"map <F6> :YcmCompleter GoTo<CR>
+"nnoremap <F6>:<Plug>(coc-definition)<CR>
 
+" 设置快捷键 F8 触发 autopep8 格式化（假设使用 autopep8）
+nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
 " 或者设置快捷键触发 black 格式化（假设使用 black）
-" nnoremap <F8> :silent!!black %<CR>:e<CR>
-"也可以用ruff,据说比较快.
-nnoremap <F8> :silent!! ruff check --fix %<CR>:e<CR>
-
+"nnoremap <F8> :silent!!black %<CR>:e<CR>
+"也可以用ruff
+"nnoremap <F8> :silent!!ruff check --fix && ruff format %<CR>:e<CR>
 " 设置快捷键 F9 触发 autopep8 格式化（假设使用 autopep8）
 nnoremap <F9> :silent!!autopep8 --in-place %<CR>:e<CR>
 
@@ -379,7 +400,8 @@ func SetMd()
 endfun
 
 "开启或关闭缩进线：
-let g:indentLine_enabled = 1
+"let g:indentLine_enabled = 1
+"let g:indentLine_enabled = 0
 "设置缩进线的颜色：
 let g:indentLine_char = '┊'
 let g:indentLine_color_term = 239
@@ -388,17 +410,12 @@ let g:indentLine_color_gui = '#aaaaaa'
 let g:indentLine_conceal_underline = 0
 
 
-"下面是 ruff的配置,一个更快的python工具
 lua << EOF
-require('lspconfig').ruff_lsp.setup {
-  init_options = {
-    settings = {
-      -- Any extra CLI arguments for `ruff` go here.
-      args = {},
-    }
-  }
+require('gitblame').setup {
+     --Note how the `gitblame_` prefix is omitted in `setup`
+    enabled = true,
+    virtual_text = false, -- 不显示行内虚拟文本
+    virtual_text_column = 80,  -- 信息显示在右侧第 80 列
+    delay = 300, -- 延迟300 ms
 }
 EOF
-
-
-
