@@ -258,14 +258,11 @@ let g:autopairs_autoclose = 1
 
 map <F1> <leader>ci <CR>
 
-"let g:languageserver_python = {'server': 'pylsp',}
-"let g:languageserver_python = {'server': 'jedi',}
+let g:languageserver_python = {'server': 'pylsp',}
 
 " 设置快捷键 F6 列出引用并跳转到引用处, 引用有一些慢,还是定义比较快一些.
 " nnoremap <F9> :lua vim.lsp.buf.references()<CR>
 nnoremap <F6> :lua vim.lsp.buf.definition()<CR>
-"map <F6> :YcmCompleter GoTo<CR>
-"nnoremap <F6>:<Plug>(coc-definition)<CR>
 
 " 设置快捷键 F8 触发 autopep8 格式化（假设使用 autopep8）
 nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
@@ -273,8 +270,10 @@ nnoremap <F8> :silent!!autopep8 --in-place %<CR>:e<CR>
 "nnoremap <F8> :silent!!black %<CR>:e<CR>
 "也可以用ruff
 "nnoremap <F8> :silent!!ruff check --fix && ruff format %<CR>:e<CR>
-" 设置快捷键 F9 触发 autopep8 格式化（假设使用 autopep8）
-nnoremap <F9> :silent!!autopep8 --in-place %<CR>:e<CR>
+"function! FixPythonFile()
+   "let current_file = expand('%')
+   "execute "silent!term ruff format ". current_file
+"endfunction
 
 " 代码折叠相关配置,不过感觉不太好用
 " 设置开启折叠
@@ -292,6 +291,8 @@ nnoremap <F9> :silent!!autopep8 --in-place %<CR>:e<CR>
 "autocmd vimenter * nested colorscheme gruvbox
 "let g:gruvbox_contrast_dark = 'medium'
 :abbr emb from IPython import embed;embed()
+:abbr plp pickle.load(open(path, "rb"))
+:abbr jlp json.loads(open(path, "r").read())
 autocmd BufNewFile *.py exec ":call SetPy()"
 func SetPy()
     call setline(1, "# ===========================================")
@@ -354,7 +355,7 @@ function! RunPythonFile()
    " execute "vnew | set bt=nofile | silent!term python ". current_file
    execute "new | set bt=nofile | silent!term python ". current_file
    wincmd k
-   resize 10
+   resize 20
 endfunction
 
 
@@ -400,8 +401,7 @@ func SetMd()
 endfun
 
 "开启或关闭缩进线：
-"let g:indentLine_enabled = 1
-"let g:indentLine_enabled = 0
+let g:indentLine_enabled = 0
 "设置缩进线的颜色：
 let g:indentLine_char = '┊'
 let g:indentLine_color_term = 239
@@ -410,12 +410,48 @@ let g:indentLine_color_gui = '#aaaaaa'
 let g:indentLine_conceal_underline = 0
 
 
+"下面是 ruff的配置,一个更快的python工具
+"lua << EOF
+"require('lspconfig').ruff.setup {
+  "init_options = {
+    "settings = {
+      "-- Any extra CLI arguments for `ruff` go here.
+      "args = {},
+    "}
+  "}
+"}
+"EOF
+
+
+" 新增的行
+"hi DiffAdd    ctermbg=235  ctermfg=108  guibg=#262626 guifg=#87af87 cterm=reverse gui=reverse
+"变化的行
+"hi DiffChange ctermbg=235  ctermfg=103  guibg=#262626 guifg=#8787af cterm=reverse gui=reverse
+" 删除的行
+"hi DiffDelete ctermbg=235  ctermfg=131  guibg=#262626 guifg=#af5f5f cterm=reverse gui=reverse
+" 变化的文字
+"hi DiffText   ctermbg=235  ctermfg=208  guibg=#262626 guifg=#ff8700 cterm=reverse gui=reverse
+
+" 设置vimdiff时的颜色配置.
+set t_Co=256
+if ! has("gui_running")
+    set t_Co=256
+    endif
+if &diff
+    colors delek
+    "colors blue
+endif
+
+
+"git 显示信息
+"
 lua << EOF
-require('gitblame').setup {
-     --Note how the `gitblame_` prefix is omitted in `setup`
-    enabled = true,
-    virtual_text = false, -- 不显示行内虚拟文本
-    virtual_text_column = 80,  -- 信息显示在右侧第 80 列
-    delay = 300, -- 延迟300 ms
-}
+require("gitblame").setup({
+  -- 可自定义显示模板，例如：
+  enabled = true,
+  delay = 500,
+  template = "<author> • <date> • <summary>",
+  date_format = "%Y-%m-%d"
+})
 EOF
+
